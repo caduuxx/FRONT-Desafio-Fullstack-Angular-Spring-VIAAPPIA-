@@ -1,0 +1,18 @@
+.stats-dashboard {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  h2, h3 {
+    margin-top: 0;
+  }
+  
+  ul {
+    padding-left: 20px;
+    list-style-type: disc;
+  }
+  

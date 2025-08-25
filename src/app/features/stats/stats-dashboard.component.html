@@ -1,0 +1,23 @@
+<div class="stats-dashboard">
+    <h2>Estatísticas de Ocorrências</h2>
+  
+    <div *ngIf="loading">Carregando...</div>
+    <div *ngIf="error">{{ error }}</div>
+  
+    <div *ngIf="stats">
+      <h3>Status</h3>
+      <ul>
+        <li *ngFor="let status of objectKeys(stats.statusCount)">
+          {{ status }}: {{ stats.statusCount[status] }}
+        </li>
+      </ul>
+  
+      <h3>Prioridade</h3>
+      <ul>
+        <li *ngFor="let priority of objectKeys(stats.priorityCount)">
+          {{ priority }}: {{ stats.priorityCount[priority] }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

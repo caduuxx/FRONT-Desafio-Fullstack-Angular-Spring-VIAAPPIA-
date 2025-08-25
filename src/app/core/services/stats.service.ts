@@ -6,11 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StatsService {
-  private apiUrl = 'http://localhost:8080/stats/incidents';
-
   constructor(private http: HttpClient) {}
 
-  getStats(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  getIncidentStats(): Observable<{ statusCount: Record<string, number>, priorityCount: Record<string, number> }> {
+    return this.http.get<{ statusCount: Record<string, number>, priorityCount: Record<string, number> }>('/stats/incidents');
   }
 }
