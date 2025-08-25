@@ -1,12 +1,7 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { importProvidersFrom } from '@angular/core';
+import { AppComponent } from './app.component';
+import { appConfig } from './app.config';
 
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
-})
-export class App {
-  protected readonly title = signal('Desafio-Fullstack-Angular-Spring-VIAAPPIA');
-}
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));

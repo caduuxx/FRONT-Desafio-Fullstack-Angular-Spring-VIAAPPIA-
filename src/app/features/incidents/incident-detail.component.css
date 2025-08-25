@@ -1,0 +1,15 @@
+.incident-detail {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  h2 {
+    margin-top: 0;
+  }
+  
+  ul {
+    padding-left: 20px;
+  }
+  

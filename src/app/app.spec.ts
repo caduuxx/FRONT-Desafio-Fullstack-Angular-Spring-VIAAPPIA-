@@ -1,25 +1,17 @@
-import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { App } from './app';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { appConfig } from './app.config';
 
-describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-      providers: [provideZonelessChangeDetection()]
-    }).compileComponents();
+describe('AppConfig', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [appConfig.providers]
+    });
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, Desafio-Fullstack-Angular-Spring-VIAAPPIA');
+  it('should create the app config', () => {
+    const config = TestBed.inject(ApplicationConfig);
+    expect(config).toBeTruthy();
   });
 });
