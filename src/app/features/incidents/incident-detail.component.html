@@ -1,18 +1,37 @@
-<div *ngIf="incident">
+<!-- incident-detail.component.html -->
+
+<div *ngIf="incident; else loading">
   <h2>{{ incident.titulo }}</h2>
-  <p><strong>Status:</strong> {{ incident.status }}</p>
-  <p><strong>Prioridade:</strong> {{ incident.prioridade }}</p>
   <p><strong>Descrição:</strong> {{ incident.descricao }}</p>
+  <p><strong>Prioridade:</strong> {{ incident.prioridade }}</p>
+  <p><strong>Status:</strong> 
+    <select [(ngModel)]="incident.status" (change)="changeStatus(incident.status)">
+      <option value="ABERTA">ABERTA</option>
+      <option value="EM_PROGRESSO">EM PROGRESSO</option>
+      <option value="FECHADA">FECHADA</option>
+    </select>
+  </p>
   <p><strong>Responsável:</strong> {{ incident.responsavelEmail }}</p>
-  <p><strong>Tags:</strong> {{ normalizeTags(incident.tags).join(', ') }}</p>
+  <p><strong>Tags:</strong> {{ incident.tags.join(', ') }}</p>
+
+  <hr />
 
   <h3>Comentários</h3>
-  <ul>
-    <li *ngFor="let comment of incident.comments">
-      <strong>{{ comment.autor }}:</strong> {{ comment.mensagem }}
-    </li>
-  </ul>
+  <div *ngIf="incident.comments?.length > 0; else noComments">
+    <div *ngFor="let comment of incident.comments" class="comment">
+      <p><strong>{{ comment.autor }}:</strong> {{ comment.mensagem }}</p>
+    </div>
+  </div>
+  <ng-template #noComments>
+    <p>Nenhum comentário ainda.</p>
+  </ng-template>
 
-  <textarea [(ngModel)]="newComment" placeholder="Adicionar comentário"></textarea>
-  <button (click)="addComment()">Enviar</button>
+  <div class="add-comment">
+    <input type="text" [(ngModel)]="newComment" placeholder="Escreva um comentário..." />
+    <button (click)="addComment()">Adicionar Comentário</button>
+  </div>
 </div>
+
+<ng-template #loading>
+  <p>Carregando incidente...</p>
+</ng-template>

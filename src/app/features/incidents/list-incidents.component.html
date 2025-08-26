@@ -1,7 +1,37 @@
 <div class="incidents-container">
-  <h2>Incidentes</h2>
 
-  <table>
+  <!-- Filtros -->
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Buscar por título ou responsável"
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="fetchIncidents()"
+    />
+
+    <select [(ngModel)]="statusFilter" (change)="fetchIncidents()">
+      <option value="">Todos os status</option>
+      <option value="ABERTA">Aberta</option>
+      <option value="EM_PROGRESSO">Em Progresso</option>
+      <option value="FECHADA">Fechada</option>
+    </select>
+
+    <select [(ngModel)]="priorityFilter" (change)="fetchIncidents()">
+      <option value="">Todas as prioridades</option>
+      <option value="BAIXA">Baixa</option>
+      <option value="MEDIA">Média</option>
+      <option value="ALTA">Alta</option>
+    </select>
+
+    <button (click)="fetchIncidents()">Filtrar</button>
+  </div>
+
+  <!-- Mensagem de loading / erro -->
+  <div *ngIf="loading">Carregando incidentes...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Tabela de incidentes -->
+  <table *ngIf="!loading && incidents.length > 0" class="incidents-table">
     <thead>
       <tr>
         <th>Título</th>
@@ -9,6 +39,7 @@
         <th>Status</th>
         <th>Responsável</th>
         <th>Tags</th>
+        <th>Criado em</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -18,14 +49,23 @@
         <td>{{ incident.prioridade }}</td>
         <td>{{ incident.status }}</td>
         <td>{{ incident.responsavelEmail }}</td>
-        <td>{{ normalizeTags(incident.tags).join(', ') }}</td>
+        <td>{{ incident.tags?.join(', ') }}</td>
+        <td>{{ incident.createdAt | dateFormat }}</td>
         <td>
-          <a [routerLink]="['/incidents', incident.id]">Detalhes</a>
-          <a [routerLink]="['/incidents', incident.id, 'edit']">Editar</a>
+          <button [routerLink]="['/incidents', incident.id]">Detalhes</button>
+          <button [routerLink]="['/incidents/edit', incident.id]">Editar</button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <div *ngIf="loading">Carregando...</div>
+  <!-- Mensagem de nenhum incidente -->
+  <div *ngIf="!loading && incidents.length === 0">Nenhum incidente encontrado.</div>
+
+  <!-- Paginação -->
+  <div class="pagination" *ngIf="totalElements > size">
+    <button (click)="previousPage()" [disabled]="page === 0">Anterior</button>
+    <span>Página {{ page + 1 }} de {{ Math.ceil(totalElements / size) }}</span>
+    <button (click)="nextPage()" [disabled]="(page + 1) * size >= totalElements">Próxima</button>
+  </div>
 </div>
