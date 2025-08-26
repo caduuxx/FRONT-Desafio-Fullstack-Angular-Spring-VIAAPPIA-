@@ -1,42 +1,32 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { IncidentsService } from '../../core/services/incidents.service';
-import { Incident } from '../../core/models/incident.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-incident-detail',
   templateUrl: './incident-detail.component.html',
   styleUrls: ['./incident-detail.component.css'],
-  standalone: true
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class IncidentDetailComponent implements OnInit {
-  incident?: Incident;
-  loading = false;
-  error = '';
+  incident: any;
+  newComment: string = '';
 
-  constructor(
-    private route: ActivatedRoute,
-    private incidentsService: IncidentsService
-  ) {}
+  constructor(private route: ActivatedRoute, private incidentService: IncidentsService) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.fetchIncident(id);
-    }
+    const id = this.route.snapshot.paramMap.get('id')!;
+    this.incidentService.getIncidentById(id).subscribe(res => this.incident = res);
   }
 
-  fetchIncident(id: string) {
-    this.loading = true;
-    this.incidentsService.getIncidentById(id).subscribe({
-      next: (res) => {
-        this.incident = res;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Erro ao carregar ocorrência';
-        this.loading = false;
-      }
+  addComment() {
+    if (!this.newComment) return;
+    this.incidentService.addComment(this.incident.id, this.newComment, 'Usuário').subscribe(res => {
+      this.incident.comments.push(res);
+      this.newComment = '';
     });
   }
 }

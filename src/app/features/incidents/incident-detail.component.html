@@ -1,18 +1,18 @@
-<div class="incident-detail" *ngIf="incident">
-    <h2>{{ incident.titulo }}</h2>
-    <p><strong>Status:</strong> {{ incident.status }}</p>
-    <p><strong>Prioridade:</strong> {{ incident.prioridade }}</p>
-    <p><strong>Responsável:</strong> {{ incident.responsavelEmail }}</p>
-    <p><strong>Descrição:</strong> {{ incident.descricao }}</p>
-  
-    <h3>Comentários</h3>
-    <ul>
-      <li *ngFor="let c of incident.comentarios">
-        <strong>{{ c.autor }}:</strong> {{ c.mensagem }}
-      </li>
-    </ul>
-  </div>
-  
-  <div *ngIf="loading">Carregando...</div>
-  <div *ngIf="error">{{ error }}</div>
-  
+<div *ngIf="incident">
+  <h2>{{ incident.titulo }}</h2>
+  <p><strong>Status:</strong> {{ incident.status }}</p>
+  <p><strong>Prioridade:</strong> {{ incident.prioridade }}</p>
+  <p><strong>Descrição:</strong> {{ incident.descricao }}</p>
+  <p><strong>Responsável:</strong> {{ incident.responsavelEmail }}</p>
+  <p><strong>Tags:</strong> {{ normalizeTags(incident.tags).join(', ') }}</p>
+
+  <h3>Comentários</h3>
+  <ul>
+    <li *ngFor="let comment of incident.comments">
+      <strong>{{ comment.autor }}:</strong> {{ comment.mensagem }}
+    </li>
+  </ul>
+
+  <textarea [(ngModel)]="newComment" placeholder="Adicionar comentário"></textarea>
+  <button (click)="addComment()">Enviar</button>
+</div>

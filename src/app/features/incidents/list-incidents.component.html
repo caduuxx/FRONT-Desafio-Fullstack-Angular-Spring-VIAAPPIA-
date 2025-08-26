@@ -1,27 +1,31 @@
 <div class="incidents-container">
-    <h2>Lista de Ocorrências</h2>
-    <div *ngIf="loading">Carregando...</div>
-    <div *ngIf="error">{{ error }}</div>
-  
-    <table *ngIf="!loading && incidents.length">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Status</th>
-          <th>Prioridade</th>
-          <th>Responsável</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let incident of incidents">
-          <td>{{ incident.titulo }}</td>
-          <td>{{ incident.status }}</td>
-          <td>{{ incident.prioridade }}</td>
-          <td>{{ incident.responsavelEmail }}</td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <div *ngIf="!loading && !incidents.length">Nenhuma ocorrência encontrada.</div>
-  </div>
-  
+  <h2>Incidentes</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Prioridade</th>
+        <th>Status</th>
+        <th>Responsável</th>
+        <th>Tags</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let incident of incidents">
+        <td>{{ incident.titulo }}</td>
+        <td>{{ incident.prioridade }}</td>
+        <td>{{ incident.status }}</td>
+        <td>{{ incident.responsavelEmail }}</td>
+        <td>{{ normalizeTags(incident.tags).join(', ') }}</td>
+        <td>
+          <a [routerLink]="['/incidents', incident.id]">Detalhes</a>
+          <a [routerLink]="['/incidents', incident.id, 'edit']">Editar</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="loading">Carregando...</div>
+</div>
