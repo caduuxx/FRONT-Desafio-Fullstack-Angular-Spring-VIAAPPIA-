@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { IncidentsService } from '../../core/services/incidents.service';
-import { FormsModule } from '@angular/forms';
 import { Status } from '../../core/models/enums';
 
 @Component({
   selector: 'app-incident-detail',
+  standalone: true,
   templateUrl: './incident-detail.component.html',
   styleUrls: ['./incident-detail.component.css'],
-  standalone: true,
   imports: [CommonModule, FormsModule]
 })
 export class IncidentDetailComponent implements OnInit {
@@ -17,9 +17,9 @@ export class IncidentDetailComponent implements OnInit {
   newComment: string = '';
   statusOptions = Object.values(Status); // Para dropdown de status
   loading = false;
-  error = '';
+  errorMessage: string = '';
 
-  constructor(private route: ActivatedRoute, private incidentService: IncidentsService) {}
+  constructor(private route: ActivatedRoute, private incidentsService: IncidentsService) {}
 
   ngOnInit() {
     this.loadIncident();
@@ -28,13 +28,13 @@ export class IncidentDetailComponent implements OnInit {
   loadIncident() {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.loading = true;
-    this.incidentService.getIncidentById(id).subscribe({
+    this.incidentsService.getIncidentById(id).subscribe({
       next: (res) => {
         this.incident = res;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'Erro ao carregar incidente.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Erro ao carregar incidente';
         this.loading = false;
       }
     });
@@ -42,24 +42,24 @@ export class IncidentDetailComponent implements OnInit {
 
   addComment() {
     if (!this.newComment) return;
-    this.incidentService.addComment(this.incident.id, this.newComment, 'Usuário').subscribe({
+    this.incidentsService.addComment(this.incident.id, this.newComment, 'Usuário').subscribe({
       next: (res) => {
         if (!this.incident.comments) this.incident.comments = [];
         this.incident.comments.push(res);
         this.newComment = '';
       },
-      error: () => {
-        this.error = 'Erro ao adicionar comentário.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Erro ao adicionar comentário';
       }
     });
   }
 
   changeStatus(newStatus: Status) {
     if (newStatus === this.incident.status) return;
-    this.incidentService.changeStatus(this.incident.id, newStatus).subscribe({
+    this.incidentsService.changeStatus(this.incident.id, newStatus).subscribe({
       next: (res) => this.incident.status = res.status,
-      error: () => {
-        this.error = 'Erro ao alterar status.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Erro ao alterar status';
       }
     });
   }

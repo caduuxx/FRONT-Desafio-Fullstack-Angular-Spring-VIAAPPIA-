@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { IncidentsService } from '../../core/services/incidents.service';
-import { normalizeTags } from '../../shared/utils/form-utils';
+import { normalizeIncidentFormValue } from '../../shared/utils/form-utils'; // <-- importa o novo util
 import { Incident } from '../../core/models/incident.model';
 
 @Component({
@@ -16,7 +16,6 @@ export class IncidentFormComponent {
   form: FormGroup;
 
   constructor(private fb: FormBuilder, private incidentService: IncidentsService) {
-    // Inicializa o form dentro do construtor
     this.form = this.fb.group({
       titulo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
       descricao: [''],
@@ -28,17 +27,9 @@ export class IncidentFormComponent {
   }
 
   submit() {
-    const formValues = this.form.value;
+    if (this.form.invalid) return;
 
-    // Cria o objeto Partial<Incident> garantindo que não existam nulls
-    const data: Partial<Incident> = {
-      titulo: formValues.titulo || '',
-      descricao: formValues.descricao || '',
-      prioridade: formValues.prioridade || 'MEDIA',
-      status: formValues.status || 'ABERTA',
-      responsavelEmail: formValues.responsavelEmail || '',
-      tags: normalizeTags(formValues.tags || [])
-    };
+    const data: Partial<Incident> = normalizeIncidentFormValue(this.form.value);
 
     this.incidentService.createIncident(data).subscribe({
       next: () => console.log('Incidente criado com sucesso!'),

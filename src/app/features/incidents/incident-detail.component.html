@@ -1,37 +1,47 @@
-<!-- incident-detail.component.html -->
+<div class="incident-detail" *ngIf="!loading; else loadingTemplate">
+  <h2>Detalhes do Incidente</h2>
 
-<div *ngIf="incident; else loading">
-  <h2>{{ incident.titulo }}</h2>
-  <p><strong>Descrição:</strong> {{ incident.descricao }}</p>
-  <p><strong>Prioridade:</strong> {{ incident.prioridade }}</p>
-  <p><strong>Status:</strong> 
-    <select [(ngModel)]="incident.status" (change)="changeStatus(incident.status)">
-      <option value="ABERTA">ABERTA</option>
-      <option value="EM_PROGRESSO">EM PROGRESSO</option>
-      <option value="FECHADA">FECHADA</option>
-    </select>
-  </p>
-  <p><strong>Responsável:</strong> {{ incident.responsavelEmail }}</p>
-  <p><strong>Tags:</strong> {{ incident.tags.join(', ') }}</p>
-
-  <hr />
-
-  <h3>Comentários</h3>
-  <div *ngIf="incident.comments?.length > 0; else noComments">
-    <div *ngFor="let comment of incident.comments" class="comment">
-      <p><strong>{{ comment.autor }}:</strong> {{ comment.mensagem }}</p>
-    </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
   </div>
-  <ng-template #noComments>
-    <p>Nenhum comentário ainda.</p>
-  </ng-template>
 
-  <div class="add-comment">
-    <input type="text" [(ngModel)]="newComment" placeholder="Escreva um comentário..." />
-    <button (click)="addComment()">Adicionar Comentário</button>
+  <div *ngIf="incident">
+    <p><strong>Título:</strong> {{ incident.titulo }}</p>
+    <p><strong>Descrição:</strong> {{ incident.descricao }}</p>
+    <p><strong>Prioridade:</strong> {{ incident.prioridade }}</p>
+    <p>
+      <strong>Status:</strong>
+      <select [(ngModel)]="incident.status" (change)="changeStatus(incident.status)">
+        <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+      </select>
+    </p>
+    <p><strong>Responsável:</strong> {{ incident.responsavelEmail }}</p>
+    <p><strong>Tags:</strong> {{ incident.tags?.join(', ') }}</p>
+
+    <hr />
+
+    <h3>Comentários</h3>
+    <div *ngIf="incident.comments?.length; else noComments">
+      <div *ngFor="let comment of incident.comments" class="comment">
+        <p><strong>{{ comment.autor }}:</strong> {{ comment.mensagem }}</p>
+      </div>
+    </div>
+    <ng-template #noComments>
+      <p>Nenhum comentário ainda.</p>
+    </ng-template>
+
+    <div class="add-comment">
+      <input
+        type="text"
+        [(ngModel)]="newComment"
+        placeholder="Adicione um comentário"
+        class="form-control"
+      />
+      <button (click)="addComment()" class="btn btn-primary mt-2">Enviar</button>
+    </div>
   </div>
 </div>
 
-<ng-template #loading>
+<ng-template #loadingTemplate>
   <p>Carregando incidente...</p>
 </ng-template>
