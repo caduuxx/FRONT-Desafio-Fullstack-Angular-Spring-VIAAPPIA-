@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { IncidentsService } from '../../core/services/incidents.service';
-import { Incident } from '../../core/models/incident.model';
+import { CommonModule } from '@angular/common';
+import { IncidentService } from '../../core/services/incident.service';
+import { DateFormatPipe } from '../../shared/pipes/date-format.pipe';
+import { normalizeTags, buildQueryParams } from '../../shared/utils/form-utils';
 
 @Component({
   selector: 'app-list-incidents',
   templateUrl: './list-incidents.component.html',
   styleUrls: ['./list-incidents.component.css'],
-  standalone: true
+  standalone: true,
+  imports: [CommonModule, DateFormatPipe]
 })
 export class ListIncidentsComponent implements OnInit {
-  incidents: Incident[] = [];
+  incidents: any[] = [];
   loading = false;
-  error = '';
 
-  constructor(private incidentsService: IncidentsService) {}
+  constructor(private incidentService: IncidentService) {}
 
   ngOnInit() {
     this.fetchIncidents();
@@ -21,14 +23,15 @@ export class ListIncidentsComponent implements OnInit {
 
   fetchIncidents() {
     this.loading = true;
-    this.incidentsService.getIncidents().subscribe({
-      next: (res) => {
-        this.incidents = res.content;
+    const query = buildQueryParams({ page: 0, size: 10 });
+    this.incidentService.getIncidents(query).subscribe({
+      next: (res: any) => {
+        this.incidents = res;
         this.loading = false;
       },
-      error: (err) => {
-        this.error = 'Erro ao carregar ocorrências';
+      error: () => {
         this.loading = false;
+        console.error('Erro ao carregar incidentes');
       }
     });
   }

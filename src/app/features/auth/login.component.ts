@@ -1,34 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { IncidentsService } from '../../core/services/incidents.service';
-import { Incident } from '../../core/models/incident.model';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-list-incidents',
-  templateUrl: './list-incidents.component.html',
-  styleUrls: ['./list-incidents.component.css'],
-  standalone: true
+  selector: 'app-login',
+  standalone: true,
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
+  imports: [CommonModule, ReactiveFormsModule]
 })
-export class ListIncidentsComponent implements OnInit {
-  incidents: Incident[] = [];
-  loading = false;
-  error = '';
+export class LoginComponent {
+  email: string = '';
+  password: string = '';
+  errorMessage: string = '';
 
-  constructor(private incidentsService: IncidentsService) {}
+  constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {}
 
-  ngOnInit() {
-    this.fetchIncidents();
-  }
-
-  fetchIncidents() {
-    this.loading = true;
-    this.incidentsService.getIncidents().subscribe({
-      next: (res) => {
-        this.incidents = res.content;
-        this.loading = false;
+  login() {
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response: { token: string }) => {
+        if (response && response.token) {
+          localStorage.setItem('token', response.token);
+          this.router.navigate(['/incidents']);
+        }
       },
-      error: (err) => {
-        this.error = 'Erro ao carregar ocorrências';
-        this.loading = false;
+      error: () => {
+        this.errorMessage = 'Credenciais inválidas. Tente novamente.';
       }
     });
   }

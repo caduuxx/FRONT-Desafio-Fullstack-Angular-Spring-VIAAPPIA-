@@ -5,4 +5,6 @@ export function formatDateBR(date: string | Date, includeTime: boolean = true): 
       : { day: '2-digit', month: '2-digit', year: 'numeric' };
     return d.toLocaleDateString('pt-BR', options);
   }
+
+  
   
