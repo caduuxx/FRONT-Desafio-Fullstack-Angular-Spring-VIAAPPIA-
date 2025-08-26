@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IncidentService } from '../../core/services/incident.service';
+import { IncidentsService } from '../../core/services/incidents.service';
 import { DateFormatPipe } from '../../shared/pipes/date-format.pipe';
 import { normalizeTags, buildQueryParams } from '../../shared/utils/form-utils';
 
@@ -15,7 +15,7 @@ export class ListIncidentsComponent implements OnInit {
   incidents: any[] = [];
   loading = false;
 
-  constructor(private incidentService: IncidentService) {}
+  constructor(private incidentService: IncidentsService) {}
 
   ngOnInit() {
     this.fetchIncidents();
@@ -23,10 +23,11 @@ export class ListIncidentsComponent implements OnInit {
 
   fetchIncidents() {
     this.loading = true;
-    const query = buildQueryParams({ page: 0, size: 10 });
-    this.incidentService.getIncidents(query).subscribe({
+    const page = 0;
+    const size = 10;
+    this.incidentService.getIncidents(page, size).subscribe({
       next: (res: any) => {
-        this.incidents = res;
+        this.incidents = res.content; // porque o serviço retorna { content, totalElements }
         this.loading = false;
       },
       error: () => {
