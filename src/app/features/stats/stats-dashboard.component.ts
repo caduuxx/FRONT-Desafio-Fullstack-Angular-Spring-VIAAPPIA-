@@ -1,21 +1,21 @@
+// features/stats/stats-dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StatsService } from '../../core/services/stats.service';
-import { DateFormatPipe } from '../../shared/pipes/date-format.pipe';
+import { IncidentsService } from '../../core/services/incidents.service';
 
 @Component({
   selector: 'app-stats-dashboard',
   templateUrl: './stats-dashboard.component.html',
   styleUrls: ['./stats-dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, DateFormatPipe]
+  imports: [CommonModule]
 })
 export class StatsDashboardComponent implements OnInit {
-  stats: any;
-  loading = false;
-  error = '';
+  stats: any = null;
+  loading = true;
+  error: string | null = null;
 
-  constructor(private statsService: StatsService) {}
+  constructor(private incidentsService: IncidentsService) {}
 
   ngOnInit() {
     this.fetchStats();
@@ -23,9 +23,15 @@ export class StatsDashboardComponent implements OnInit {
 
   fetchStats() {
     this.loading = true;
-    this.statsService.getIncidentStats().subscribe({
-      next: (res) => { this.stats = res; this.loading = false; },
-      error: () => { this.error = 'Erro ao carregar estatísticas'; this.loading = false; }
+    this.incidentsService.getStats().subscribe({
+      next: (res) => {
+        this.stats = res;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Erro ao carregar estatísticas.';
+        this.loading = false;
+      }
     });
   }
 }

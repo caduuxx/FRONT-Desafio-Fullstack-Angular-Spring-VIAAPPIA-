@@ -61,4 +61,9 @@ export class IncidentsService {
   addComment(id: string, message: string, autor: string): Observable<Comment> {
     return this.http.post<Comment>(`${this.apiUrl}/${id}/comments`, { mensagem: message, autor });
   }
+
+  // 🔹 Novo método para dashboard/stats
+  getStats(): Observable<any> {
+    return this.http.get<any>('http://localhost:8080/stats/incidents');
+  }
 }

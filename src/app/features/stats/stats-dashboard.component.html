@@ -1,23 +1,24 @@
-<div class="stats-dashboard">
-    <h2>Estatísticas de Ocorrências</h2>
+<!-- stats-dashboard.component.html -->
+<div *ngIf="loading">
+  <p>Carregando estatísticas...</p>
+</div>
+
+<div *ngIf="error">
+  <p>{{ error }}</p>
+</div>
+
+<div *ngIf="stats">
+  <h2>Dashboard de Incidentes</h2>
   
-    <div *ngIf="loading">Carregando...</div>
-    <div *ngIf="error">{{ error }}</div>
-  
-    <div *ngIf="stats">
-      <h3>Status</h3>
-      <ul>
-        <li *ngFor="let status of objectKeys(stats.statusCount)">
-          {{ status }}: {{ stats.statusCount[status] }}
-        </li>
-      </ul>
-  
-      <h3>Prioridade</h3>
-      <ul>
-        <li *ngFor="let priority of objectKeys(stats.priorityCount)">
-          {{ priority }}: {{ stats.priorityCount[priority] }}
-        </li>
-      </ul>
-    </div>
-  </div>
-  
+  <p><strong>Total de Incidentes:</strong> {{ stats.total }}</p>
+  <p><strong>Incidentes Abertos:</strong> {{ stats.aberta }}</p>
+  <p><strong>Em Progresso:</strong> {{ stats.emProgresso }}</p>
+  <p><strong>Fechados:</strong> {{ stats.fechada }}</p>
+
+  <h3>Incidentes por Prioridade</h3>
+  <ul>
+    <li>Baixa: {{ stats.baixa }}</li>
+    <li>Média: {{ stats.media }}</li>
+    <li>Alta: {{ stats.alta }}</li>
+  </ul>
+</div>
