@@ -1,18 +1,15 @@
-// src/main.ts
 import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { AppComponent } from './app/app.component';
 import { appRoutes } from './app/app.routes';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { AuthInterceptor } from './app/core/interceptors/auth.interceptor';
-import { importProvidersFrom } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { authInterceptor } from './app/core/interceptors/auth.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(appRoutes),
-    provideHttpClient(withInterceptorsFromDi()), 
-    importProvidersFrom(CommonModule, ReactiveFormsModule)
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimations()
   ]
 }).catch(err => console.error(err));

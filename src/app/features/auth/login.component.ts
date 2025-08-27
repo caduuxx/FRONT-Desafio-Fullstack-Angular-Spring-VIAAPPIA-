@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -9,25 +9,30 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  errorMessage: string = '';
+  email = '';
+  password = '';
+  errorMessage = '';
 
-  constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   login() {
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Preencha email e senha';
+      return;
+    }
+
     this.authService.login(this.email, this.password).subscribe({
       next: (response: { token: string }) => {
-        if (response && response.token) {
+        if (response?.token) {
           localStorage.setItem('token', response.token);
           this.router.navigate(['/incidents']);
         }
       },
-      error: () => {
-        this.errorMessage = 'Credenciais inválidas. Tente novamente.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Credenciais inválidas. Tente novamente.';
       }
     });
   }

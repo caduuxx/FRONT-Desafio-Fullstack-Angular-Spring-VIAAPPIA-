@@ -1,0 +1,9 @@
+<mat-toolbar color="primary">
+  <span>VIAAPPIA</span>
+  <span class="spacer"></span>
+  <button mat-icon-button (click)="toggleTheme()">
+    <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

@@ -1,1 +1,92 @@
-/* You can add global styles to this file, and also import other style files */
+/* ======================== */
+/*   THEME GLOBAL MATERIAL  */
+/* ======================== */
+
+/* Light theme (padrão) */
+:root {
+  --primary: #3f51b5;   /* Indigo 500 */
+  --accent: #e91e63;    /* Pink A200 */
+  --warn: #f44336;      /* Red 500 */
+
+  --bg-color: #ffffff;
+  --text-color: #000000;
+}
+
+/* Dark theme */
+.dark-theme {
+  --primary: #3f51b5;
+  --accent: #e91e63;
+  --warn: #f44336;
+
+  --bg-color: #121212;
+  --text-color: #ffffff;
+}
+
+/* ======================== */
+/*     GLOBAL STYLES        */
+/* ======================== */
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Botões */
+button.mat-mdc-button,
+button.mat-mdc-raised-button,
+button.mat-mdc-flat-button {
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+/* Cards */
+.mat-mdc-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* Inputs */
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Títulos */
+h1, h2, h3 {
+  font-weight: 600;
+  margin: 16px 0;
+  color: var(--primary);
+}
+
+/* ======================== */
+/*    DARK MODE EXTRAS      */
+/* ======================== */
+
+.dark-theme body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.dark-theme .mat-mdc-card {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
